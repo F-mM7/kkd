@@ -16,7 +16,7 @@ function App() {
         animation={animation}
         onAnimationComplete={onAnimationComplete}
       />
-      <ArrowButtons onDirection={roll} disabled={cubeState.isAnimating} />
+      <ArrowButtons onDirection={roll} disabled={false} />
     </div>
   );
 }

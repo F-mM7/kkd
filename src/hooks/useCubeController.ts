@@ -18,19 +18,16 @@ export function useCubeController() {
 
   const animationRef = useRef<AnimationState | null>(null);
   const [animation, setAnimation] = useState<AnimationState | null>(null);
+  const inputQueue = useRef<Direction[]>([]);
+  const stateRef = useRef(cubeState);
+  stateRef.current = cubeState;
 
-  const roll = useCallback(
-    (direction: Direction) => {
-      if (cubeState.isAnimating) return;
+  const startRoll = useCallback(
+    (direction: Direction, fromPos: { x: number; z: number }) => {
+      const nextPos = getNextPosition(fromPos, direction);
+      if (!isWithinBounds(nextPos, GRID_CELLS)) return false;
 
-      const nextPos = getNextPosition(cubeState.gridPosition, direction);
-      if (!isWithinBounds(nextPos, GRID_CELLS)) return;
-
-      const { pivot, axis } = calculatePivot(
-        cubeState.gridPosition,
-        direction,
-      );
-
+      const { pivot, axis } = calculatePivot(fromPos, direction);
       const anim: AnimationState = {
         direction,
         pivotPoint: pivot,
@@ -40,26 +37,53 @@ export function useCubeController() {
       animationRef.current = anim;
       setCubeState((prev) => ({ ...prev, isAnimating: true }));
       setAnimation(anim);
+      return true;
     },
-    [cubeState.isAnimating, cubeState.gridPosition],
+    [],
+  );
+
+  const roll = useCallback(
+    (direction: Direction) => {
+      if (stateRef.current.isAnimating) {
+        inputQueue.current.push(direction);
+        return;
+      }
+      startRoll(direction, stateRef.current.gridPosition);
+    },
+    [startRoll],
   );
 
   const onAnimationComplete = useCallback(() => {
     const anim = animationRef.current;
     if (!anim) return;
 
+    animationRef.current = null;
+    setAnimation(null);
+
     setCubeState((prev) => {
       const nextPos = getNextPosition(prev.gridPosition, anim.direction);
-      const nextOrientation = updateOrientation(prev.orientation, anim.direction);
-      return {
+      const nextOrientation = updateOrientation(
+        prev.orientation,
+        anim.direction,
+      );
+      const newState = {
         gridPosition: nextPos,
         orientation: nextOrientation,
         isAnimating: false,
       };
+      stateRef.current = newState;
+
+      // 先行入力キューから次を処理
+      const next = inputQueue.current.shift();
+      if (next) {
+        requestAnimationFrame(() => {
+          startRoll(next, stateRef.current.gridPosition);
+        });
+      }
+
+      return newState;
     });
-    animationRef.current = null;
-    setAnimation(null);
-  }, []);
+  }, [startRoll]);
 
   return { cubeState, animation, roll, onAnimationComplete };
 }
