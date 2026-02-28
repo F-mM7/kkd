@@ -32,17 +32,19 @@ export function calculatePivot(
   gridPos: GridPosition,
   direction: Direction,
 ): { pivot: [number, number, number]; axis: [number, number, number] } {
-  const { x, z } = gridPos;
+  // グリッド座標→ワールド座標（マス中心に+0.5オフセット）
+  const wx = gridPos.x + 0.5;
+  const wz = gridPos.z + 0.5;
 
   switch (direction) {
     case 'right':
-      return { pivot: [x + 0.5, 0, z], axis: [0, 0, -1] };
+      return { pivot: [wx + 0.5, 0, wz], axis: [0, 0, 1] };
     case 'left':
-      return { pivot: [x - 0.5, 0, z], axis: [0, 0, 1] };
+      return { pivot: [wx - 0.5, 0, wz], axis: [0, 0, -1] };
     case 'up':
-      return { pivot: [x, 0, z - 0.5], axis: [1, 0, 0] };
+      return { pivot: [wx, 0, wz - 0.5], axis: [1, 0, 0] };
     case 'down':
-      return { pivot: [x, 0, z + 0.5], axis: [-1, 0, 0] };
+      return { pivot: [wx, 0, wz + 0.5], axis: [-1, 0, 0] };
   }
 }
 

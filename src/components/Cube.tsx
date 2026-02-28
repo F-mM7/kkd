@@ -56,9 +56,9 @@ export function Cube({ cubeState, animation, onAnimationComplete }: CubeProps) {
   });
 
   const staticPosition: [number, number, number] = [
-    cubeState.gridPosition.x,
+    cubeState.gridPosition.x + 0.5,
     0.5,
-    cubeState.gridPosition.z,
+    cubeState.gridPosition.z + 0.5,
   ];
 
   const cubeMesh = (
