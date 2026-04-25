@@ -1,73 +1,28 @@
-# React + TypeScript + Vite
+# kkd
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+3D グリッド上で立方体（ダイス）を転がす操作を訓練する Web アプリ。謎解きゲーム「kyubu kyubu dice」のトレーニング用です。
 
-Currently, two official plugins are available:
+🔗 デモ: https://f-mm7.github.io/kkd/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 概要
 
-## React Compiler
+グリッド上に置かれた立方体を、矢印ボタンまたはキーボードの矢印キーで上下左右に転がします。立方体の各面（top / bottom / front / back / left / right）の向きはアニメーション中も整合的に保たれます。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 操作
 
-## Expanding the ESLint configuration
+- **矢印ボタン**: 画面下部のボタンで方向を指定
+- **キーボード**: 矢印キーで操作
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 開発
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev      # 開発サーバ
+npm run build    # ビルド
+npm run lint     # ESLint
+npm run deploy   # gh-pages へデプロイ
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 技術スタック
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+React 19 / TypeScript / Vite / Three.js / @react-three/fiber / @react-three/drei
